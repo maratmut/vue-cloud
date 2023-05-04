@@ -1,5 +1,17 @@
 <script setup>
 import ActionBar from '../components/ActionBar.vue';
+import filesApi from '../api/files';
+import { onMounted } from 'vue';
+
+const fetchFiles = () => {
+  filesApi.index()
+  .then(response => console.log(response))
+  .catch((error) => console.error(error))
+}
+
+onMounted(() => {
+  fetchFiles();
+})
 </script>
 <template>
   <div class="container py-3">
@@ -53,6 +65,4 @@ import ActionBar from '../components/ActionBar.vue';
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
