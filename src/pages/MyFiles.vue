@@ -1,6 +1,7 @@
 <script setup>
 import ActionBar from '../components/ActionBar.vue';
 import filesApi from '../api/files';
+import FilesList from '../components/files/FilesList.vue';
 import { onMounted, ref } from 'vue';
 
 const files = ref([]);
@@ -8,15 +9,16 @@ const files = ref([]);
 const fetchFiles = async () => {
   try {
     const { data } = await filesApi.index();
-    files.value = data;
+    return data;
   } catch (error) {
     console.error(error);
   }
 };
 
-onMounted(() => {
-  fetchFiles();
+onMounted(async () => {
+  files.value = await fetchFiles();
 });
+
 </script>
 <template>
   <div class="container py-3">
@@ -28,22 +30,7 @@ onMounted(() => {
         <icon-arrow-up />
       </button>
     </div>
-    <div class="row">
-      <div class="col-md-3" v-for="file in files" :key="`file-${file.id}`">
-        <div class="card mb-4">
-          <img class="file-thumb" :src="file.url" v-if="file.url" />
-          <div class="card-body text-center py-5" v-else>
-            <icon-type-common height="4em" width="4em" />
-          </div>
-          <div class="card-footer">
-            <div class="d-flex align-items-center">
-              <icon-type-common />
-              <span class="file-name">{{ file.name }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <FilesList :files="files" />
   </div>
 </template>
 
