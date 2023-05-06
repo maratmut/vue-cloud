@@ -1,17 +1,22 @@
 <script setup>
 import ActionBar from '../components/ActionBar.vue';
 import filesApi from '../api/files';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
-const fetchFiles = () => {
-  filesApi.index()
-  .then(response => console.log(response))
-  .catch((error) => console.error(error))
-}
+const files = ref([]);
+
+const fetchFiles = async () => {
+  try {
+    const { data } = await filesApi.index();
+    files.value = data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 onMounted(() => {
   fetchFiles();
-})
+});
 </script>
 <template>
   <div class="container py-3">
@@ -24,39 +29,16 @@ onMounted(() => {
       </button>
     </div>
     <div class="row">
-      <div class="col-md-3" v-for="item in 6">
+      <div class="col-md-3" v-for="file in files" :key="`file-${file.id}`">
         <div class="card mb-4">
-          <div class="card-body text-center py-5">
+          <img class="file-thumb" :src="file.url" v-if="file.url" />
+          <div class="card-body text-center py-5" v-else>
             <icon-type-common height="4em" width="4em" />
           </div>
           <div class="card-footer">
             <div class="d-flex align-items-center">
               <icon-type-common />
-              <span class="file-name">File {{ item }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card mb-4 selected-file">
-          <div class="card-body text-center py-5">
-            <icon-type-pdf height="4em" width="4em" />
-          </div>
-          <div class="card-footer">
-            <div class="d-flex align-items-center">
-              <icon-type-pdf />
-              <span class="file-name">File 7.pdf</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card mb-4">
-          <img class="file-thumb" src="https://picsum.photos/id/1015/400/160" />
-          <div class="card-footer">
-            <div class="d-flex align-items-center">
-              <icon-type-image />
-              <span class="file-name">File 8.png</span>
+              <span class="file-name">{{ file.name }}</span>
             </div>
           </div>
         </div>
