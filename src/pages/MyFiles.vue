@@ -2,15 +2,19 @@
 import ActionBar from '../components/ActionBar.vue';
 import filesApi from '../api/files';
 import FilesList from '../components/files/FilesList.vue';
-import {ref, reactive, watchEffect } from 'vue';
+import {ref, reactive, watchEffect, toRef } from 'vue';
 import SortToggler from '../components/SortToggler.vue';
+import SearchForm from '../components/SearchForm.vue';
 
 const files = ref([]);
 
 const query = reactive({
   _sort: 'name',
   _order: 'asc',
+  q: ''
 });
+
+const q = toRef(query, 'q')
 
 const handleSortChange = (payload) => {
   query._sort = payload.column;
@@ -35,9 +39,12 @@ watchEffect(async () => {
     <ActionBar />
 
     <div class="d-flex justify-content-between align-items-center py-2">
-      <h6 class="text-muted mb-0">Files</h6>
+      <h6 class="text-muted mb-0">Файлы</h6>
       <SortToggler @sort-change="handleSortChange($event)" />
     </div>
+    <teleport to="#search-form">
+      <SearchForm v-model="q" />
+    </teleport>
     <FilesList :files="files" />
   </div>
 </template>
