@@ -2,7 +2,7 @@
 import ActionBar from '../components/ActionBar.vue';
 import filesApi from '../api/files';
 import FilesList from '../components/files/FilesList.vue';
-import {ref, reactive, watchEffect, toRef } from 'vue';
+import { ref, reactive, watchEffect, toRef } from 'vue';
 import SortToggler from '../components/SortToggler.vue';
 import SearchForm from '../components/SearchForm.vue';
 
@@ -11,14 +11,20 @@ const files = ref([]);
 const query = reactive({
   _sort: 'name',
   _order: 'asc',
-  q: ''
+  q: '',
 });
 
-const q = toRef(query, 'q')
+const q = toRef(query, 'q');
 
 const handleSortChange = (payload) => {
   query._sort = payload.column;
   query._order = payload.order;
+};
+
+const selectedItems = ref([]);
+
+const handleSelectChange = (items) => {
+  selectedItems.value = Array.from(items);
 };
 
 const fetchFiles = async (query) => {
@@ -45,7 +51,7 @@ watchEffect(async () => {
     <teleport to="#search-form">
       <SearchForm v-model="q" />
     </teleport>
-    <FilesList :files="files" />
+    <FilesList :files="files" @select-change="handleSelectChange($event)" />
   </div>
 </template>
 
