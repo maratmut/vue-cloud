@@ -1,12 +1,15 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import icons from "./components/icons/all";
+import { createApp } from 'vue';
+import App from './App.vue';
+import icons from './components/icons/all';
+import Toast from './components/toast/Toast.vue';
 
 const app = createApp(App);
 
 // Register all icons
 for (const [key, value] of Object.entries(icons)) {
-    app.component(key, value);
-  }
+  app.component(key, value);
+}
 
-app.mount('#app')
+app.component('app-toast', Toast);
+
+app.mount('#app');
