@@ -42,7 +42,7 @@ watchEffect(async () => {
 </script>
 <template>
   <div class="container py-3">
-    <ActionBar />
+    <ActionBar :selected-count="selectedItems.length" />
 
     <div class="d-flex justify-content-between align-items-center py-2">
       <h6 class="text-muted mb-0">Файлы</h6>

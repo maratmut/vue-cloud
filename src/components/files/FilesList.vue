@@ -29,16 +29,21 @@ const selectMultiple = (item) => {
 };
 
 const isSelected = (item) => selectedItems.has(item);
+
+const clearSelected = () => {
+  selectedItems.clear();
+  emit('select-change', selectedItems);
+};
 </script>
 
 <template>
-  <div class="row">
+  <div class="row" @click="clearSelected">
     <FileItem
       v-for="file in files"
       :key="`file-${file.id}`"
       :file="file"
-      @click.exact="selectOne(file)"
-      @click.ctrl.exact="selectMultiple(file)"
+      @click.exact.stop="selectOne(file)"
+      @click.ctrl.exact.stop="selectMultiple(file)"
       :class="{ 'selected-file': isSelected(file) }"
     />
   </div>
